@@ -1,0 +1,47 @@
+FROM php:8.1.1-fpm
+
+ENV TZ="/usr/share/zoneinfo/America/Guatemala"
+
+RUN echo 'alias migrate="php artisan migrate"' >> ~/.bashrc
+RUN echo 'alias rollback="php artisan migrate:rollback"' >> ~/.bashrc
+RUN echo 'alias seed="php artisan db:seed"' >> ~/.bashrc
+RUN echo 'alias seedgod="php artisan db:seed --class=GodSeeder"' >> ~/.bashrc
+RUN echo 'alias cda="composer dump-autoload"' >> ~/.bashrc
+
+ENV TZ="/usr/share/zoneinfo/America/Guatemala"
+RUN apt-get update
+RUN apt-get install -y \
+libfreetype6-dev \
+libjpeg62-turbo-dev \
+libpng-dev \
+libmcrypt-dev \
+mariadb-client \
+libxml2-dev \
+zlib1g-dev  \
+libpng-dev \
+libjpeg-dev \
+libmcrypt-dev \
+libfreetype6-dev \
+zip
+
+
+RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install pcntl
+RUN docker-php-ext-install soap
+RUN docker-php-ext-install simplexml
+
+
+#RUN docker-php-ext-install pcntl docker-php-ext-configure pcntl --enable-pcntl
+
+#RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
+
+ADD ./dockerfiles/php/limits.conf /usr/local/etc/php-fpm.d/limits.conf
+ADD ./dockerfiles/php/limits.ini /usr/local/etc/php/conf.d/limits.ini
+
+# and install dependencies
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN apt-get install -y nodejs
+
+WORKDIR /var/www
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

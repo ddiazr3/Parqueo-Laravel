@@ -1,0 +1,93 @@
+version: '2'
+services:
+  redis:
+    build:
+      context: ./
+      dockerfile: dockerfiles/redis/redis.docker
+    restart: always
+  nginx:
+    build:
+      context: ./
+      dockerfile: dockerfiles/nginx.docker
+    volumes:
+      - './:/var/www'
+    restart: always
+    ports:
+      - '8082:80'
+    links:
+      - php
+  php:
+    build:
+      context: ./
+      dockerfile: dockerfiles/php/php.docker
+    volumes:
+      - './:/var/www'
+      - './storage/tmp:/tmp'
+    restart: always
+    links:
+      - mysql
+      - redis
+      - soketi
+    environment:
+      - DB_PORT=3306
+      - DB_HOST=mysql
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis
+      - PUSHER_PORT=6002
+      - PUSHER_HOST=soketi
+      - PUSHER_APP_ID=app-id-parqueo
+      - PUSHER_APP_KEY=app-key-parqueo
+      - PUSHER_APP_SECRET=app-secret-parqueo
+      - PUSHER_SCHEME=http
+  scheduler:
+    build:
+      context: ./
+      dockerfile: dockerfiles/scheduler/scheduler.docker
+    volumes:
+      - './:/var/www'
+      - './storage/tmp:/tmp'
+    restart: always
+    links:
+      - mysql
+      - redis
+      - soketi
+    environment:
+      - DB_PORT=3306
+      - DB_HOST=mysql
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis
+      - PUSHER_PORT=6002
+      - PUSHER_HOST=soketi
+      - PUSHER_APP_ID=app-id-parqueo
+      - PUSHER_APP_KEY=app-key-parqueo
+      - PUSHER_APP_SECRET=app-secret-parqueo
+      - PUSHER_SCHEME=http
+  soketi:
+    image: 'quay.io/soketi/soketi:0.17-16-alpine'
+    restart: always
+    ports:
+      - '6002:6002'
+      - '9602:9601'
+    environment:
+      - DEBUG=1
+      - DEFAULT_APP_ID=app-id-parqueo
+      - DEFAULT_APP_KEY=app-key-parqueo
+      - DEFAULT_APP_SECRET=app-secret-parqueo
+      - SOKETI_PORT=6002
+      - SOKETI_METRICS_ENABLED=1
+      - SOKETI_METRICS_PORT=9602
+      - DEFAULT_APP_ENABLE_CLIENT_MESSAGES=true
+  mysql:
+    build:
+      context: ./
+      dockerfile: dockerfiles/mysql.docker
+    volumes:
+      - 'mysql-data:/var/lib/mysql'
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=AdM1n2022_!
+      - MYSQL_DATABASE=parqueo
+    ports:
+      - '33061:3306'
+volumes:
+  mysql-data: null

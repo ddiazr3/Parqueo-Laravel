@@ -1,0 +1,30 @@
+FROM php:8.1.1-fpm
+
+ENV TZ="/usr/share/zoneinfo/America/Guatemala"
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends \
+libfreetype6-dev \
+libjpeg62-turbo-dev \
+libpng-dev \
+libmcrypt-dev \
+mariadb-client \
+libxml2-dev \
+zlib1g-dev  \
+libpng-dev \
+libjpeg-dev \
+libfreetype6-dev zip
+
+#RUN docker-php-ext-install pcntl docker-php-ext-configure pcntl --enable-pcntl
+
+#RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
+
+
+COPY dockerfiles/horizon/horizon.sh /opt/bin/entrypoint.sh
+RUN chmod +x /opt/bin/entrypoint.sh
+
+CMD ["/opt/bin/entrypoint.sh"]
+
+ADD ./dockerfiles/php/limits.conf /usr/local/etc/php-fpm.d/limits.conf
+ADD ./dockerfiles/php/limits.ini /usr/local/etc/php/conf.d/limits.ini
+
+WORKDIR /var/www
