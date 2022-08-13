@@ -62,7 +62,7 @@ class RolesController extends CrudController
             })->toArray();
 
             $empresaIds = $role->empresas->map(function ($empresa) {
-                return $empresa->id;
+                return $empresa->empresa_id;
             })->toArray();
 
             $role->empresas_ids = $empresaIds;
@@ -177,15 +177,13 @@ class RolesController extends CrudController
             }
 
             Log::info($request->role['empresas_ids']);
-            if(count($request->role['empresas_ids']) > 0){
                 foreach ($request->role['empresas_ids'] as $empresa) {
+                    Log::info("*******");
                     $rmp = new RoleEmpres;
                     $rmp->role_id = $role->id;
                     $rmp->empresa_id = $empresa;
                     $rmp->save();
                 }
-            }
-
         });
 
         Cache::flush();

@@ -18,6 +18,8 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('profile', Controllers\ProfileController::class, ['only' => ['index', 'detail', 'store']]);
+    Route::get('registros/cancelar/{id}', [Controllers\RegistroController::class,'cancelar']);
+    Route::get('registros/salir/{id}', [Controllers\RegistroController::class,'salir']);
 });
 
 Route::group(['middleware' => ['auth', 'cancerbero']], function () {

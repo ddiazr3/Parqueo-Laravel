@@ -27,6 +27,16 @@ Broadcast::channel('privado.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('presence.{id}', function () {
+//Broadcast::channel('privado.{id}', function ($user, $id) {
+//    \Illuminate\Support\Facades\Log::info("id +log ".$user->id);
+//    \Illuminate\Support\Facades\Log::info("id recibido ".$id);
+//    return (int) $user->id === (int) $id;
+//});
+
+Broadcast::channel('ingreso-ticket.{id}', function ($user,$id) {
+    return true;
+});
+
+Broadcast::channel('egreso-ticket.{id}', function ($user,$id) {
     return true;
 });

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EmpresaController extends CrudController
 {
@@ -30,6 +31,8 @@ class EmpresaController extends CrudController
         $this->setField(['name' => 'Teléfono', 'field' => 'telefono']);
         $this->middleware(function ($request, $next) {
             if (!Cancerbero::isGod()) {
+
+
                 $this->setWhereIn('id', Auth::user()->empresasIds());
             }
             return $next($request);

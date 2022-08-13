@@ -18,8 +18,9 @@ return new class extends Migration
 
             $table->unsignedBigInteger('empresa_id');
             $table->unsignedBigInteger('user_creacion_id');
-            $table->unsignedBigInteger('user_salida_id');
+            $table->unsignedBigInteger('user_salida_id')->nullable();
             $table->unsignedBigInteger('tipo_placa_id');
+            $table->unsignedBigInteger('estado_ticket_id');
             $table->string('placa');
             $table->string("descripcion")->nullable();
             $table->timestamp('fecha_ingreso')->nullable();
@@ -28,6 +29,7 @@ return new class extends Migration
             $table->foreign('user_creacion_id')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');
             $table->foreign('user_salida_id')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');
             $table->foreign('empresa_id')->references('id')->on('empresas')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('estado_ticket_id')->references('id')->on('estado_tickets')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
