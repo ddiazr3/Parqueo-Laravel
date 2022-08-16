@@ -50,35 +50,14 @@
 
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-sm table-striped table-hover dataTable display">
-                    <thead>
-                    <tr>
-                        <th>Empresa</th>
-                        <th>Descripción</th>
-                        <th>Placa</th>
-                        <th>Fecha Ingreso</th>
-                        <th>Fecha Salida</th>
-                        <th>Opc.</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="ing in tickets">
-                        <td v-text="ing.empresa.empresa"></td>
-                        <td v-text="ing.descripcion"></td>
-                        <td v-text="ing.placa"></td>
-                        <td v-text="ing.fecha_ingreso"></td>
-                        <td v-text="ing.fecha_egreso"></td>
-                        <td>
-                            <button class="btn btn-warning btn-sm" @click="cancelar(ing.id)">
-                                <i class="fa fa-stop"></i>
-                            </button>
-                            <button class="btn btn-primary btn-sm" @click="salir(ing.id)">
-                                <i class="fa fa-car-side"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <data-table
+                    :header="header"
+                    v-bind:body="tickets"
+                    v-bind:buttons="buttons"
+                    @buscar="buscar"
+                    @action="actionComponent"
+                >
+                </data-table>
             </div>
         </div>
     </div>
@@ -99,6 +78,48 @@ export default {
                 numeroplaca: null,
                 descripcion: null
             },
+            header: [
+                {
+                    name: "empresa.empresa",
+                    title: "Empresa",
+                    sortField: 'empresa.empresa'
+                },
+                {
+                    name: "descripcion",
+                    title: "Descipción"
+                },
+                {
+                    name: "placa",
+                    title: "Placa",
+                    sortField: 'placa'
+                },
+                {
+                    name: "fecha_ingreso",
+                    title: "Fecha Ingreso",
+                    sortField: 'fecha_ingreso'
+                },
+                {
+                    name: "fecha_egreso",
+                    title: "Fecha Egreso",
+                    sortField: 'fecha_egreso'
+                },
+                {
+                    name: "actions",
+                    title: "Acciones"
+                }
+            ],
+            buttons: [
+                {
+                    class: 'btn-warning btn-sm',
+                    icon: '<i class="fa fa-stop"></i>',
+                    action: 'cancelar'
+                },
+                {
+                    class: 'btn-primary btn-sm',
+                    icon: '<i class="fa fa-car-side"></i>',
+                    action: 'salir'
+                }
+            ],
             tickets: this.ingresos,
             loading: true,
             saving: false,
@@ -125,11 +146,29 @@ export default {
         //     console.log("eestoy escuchando")
         //     console.log(e)
         // })
-        this.dataTableInicio()
         this.listen(this.emid)
         this.listen2(this.emid)
     },
     methods: {
+        actionComponent(action, value) {
+            switch (action) {
+                case 'cancelar' :
+                    this.cancelar(value);
+                    break;
+                case 'salir' :
+                    this.salir(value)
+                    break;
+                default:
+                    break
+            }
+            console.log(`Action ${action} value ${value}`)
+        },
+        buscar(data) {
+            let newdata = this.ingresos.filter(el => {
+                return el.placa.includes(data) || el.empresa.empresa.includes(data)
+            })
+            this.tickets = newdata
+        },
         save() {
             this.saving = true;
             axios
@@ -137,8 +176,6 @@ export default {
                 .then((response) => {
                     // this.ingresos.push(response.data)
                     this.tickets.push(response.data)
-                    console.log("tamaño " + this.ingresos.length)
-                    console.log(response.data);
                     this.clearSave()
                     this.saving = false;
                 })
@@ -147,27 +184,27 @@ export default {
                 });
         },
         cancelar(id) {
-            this.confirm(this,{
+            this.confirm(this, {
                 title: '',
                 showCancelButton: true,
                 confirmButtonText: "Si",
                 text: 'Seguro de cancelar este ingreso?',
             }).then((result) => {
                 axios
-                    .get(this.path+'/cancelar/'+id)
+                    .get(this.path + '/cancelar/' + id)
                     .then((response) => {
                         //$('.dataTable').dataTable().destroy();
-                        $('.dataTable').dataTable().empty();
+                        // $('.dataTable').dataTable().empty();
                         console.log("1")
                         let newtickets = this.tickets.filter((el) => {
-                            if(el.id != id){
+                            if (el.id != id) {
                                 console.log("1.1")
                                 return el
                             }
                         })
                         console.log("2")
                         this.tickets = newtickets
-                        this.dataTableInicio()
+
                         console.log("3")
                         // $('.dataTable').dataTable({
                         //     data: newtickets
@@ -179,17 +216,17 @@ export default {
             })
         },
         salir(id) {
-            this.confirm(this,{
+            this.confirm(this, {
                 title: '',
                 showCancelButton: true,
                 confirmButtonText: "Si",
                 text: 'Seguro de este egreso?',
             }).then((result) => {
                 axios
-                    .get(this.path+'/salir/'+id)
+                    .get(this.path + '/salir/' + id)
                     .then((response) => {
                         let newtickets = this.tickets.filter((el) => {
-                            if(el.id != id){
+                            if (el.id != id) {
                                 return el
                             }
                         })
@@ -209,13 +246,13 @@ export default {
         },
         handleError(error) {
             this.saving = false;
-            if(error.response != undefined){
+            if (error.response != undefined) {
                 if (error.response.status == 422) {
                     this.validationErrors = error.response.data.errors;
                 } else {
                     this.alertError(this, {text: error.response.data.message})
                 }
-            }else{
+            } else {
                 console.log(error)
             }
 
@@ -232,18 +269,19 @@ export default {
                     Echo.private('ingreso-ticket.' + emi)
                         .listen('IngresoTicketEvent', (e) => {
                             this.ingresos.push(e.ticket)
+                            this.componentKey += 1
                         });
 
                 })
             }
         },
-        listen2(emids){
+        listen2(emids) {
             if (emids.length) {
                 emids.forEach(emi => {
                     Echo.private('egreso-ticket.' + emi)
                         .listen('EgresoTicketEvent', (e) => {
                             let newtickets = this.tickets.filter((el) => {
-                                if(el.id != e.ticket){
+                                if (el.id != e.ticket) {
                                     return el
                                 }
                             })
@@ -252,42 +290,7 @@ export default {
                 })
             }
         },
-        dataTableInicio(){
-            let table = $('.dataTable').dataTable({
-                processing: true,
-                // serverSide : true,
-                searchDelay: 500,
-                bLengthChange: false,
-                sDom : '<"row" <"col-sm-8 pull-left"f> <"col-sm-4"<"btn-toolbar pull-right"  B <"btn-group btn-group-sm btn-group-add">>>>     t<"pull-left"i><"pull-right"p>',
-                iDisplayLength: 20,
-                columnDefs: [
-                    {
-                        targets: -1,
-                        class: "text-right text-end",
-                    },
-                ],
-                oLanguage: {
-                    sLengthMenu: "Mostrar _MENU_ resultados por p&aacute;gina",
-                    sZeroRecords: "No se encontraron registros",
-                    sInfo: "Mostrando _START_ a _END_ de _TOTAL_ resultados",
-                    sInfoEmpty: "Mostrando 0 a 0 de 0 resultados",
-                    sInfoFiltered: "(filtrado de _MAX_ resultados totales)",
-                    sSearch: "",
-                    sProcessing: "Procesando",
-                    oPaginate: {
-                        sPrevious: "Anterior",
-                        sNext: "Siguiente",
-                        sFirst: "Primera",
-                        sLast: "Ultima"
-                    },
-                },
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Buscar"
-                }
-            })
 
-        }
     },
     computed: {
         ticketscount: function () {
@@ -303,6 +306,7 @@ export default {
 .dataTables_filter label {
     width: 100%;
 }
+
 .dataTables_filter label input {
     width: 100% !important;
 }

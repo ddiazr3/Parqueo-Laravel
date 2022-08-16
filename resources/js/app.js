@@ -7,8 +7,9 @@
 require("./bootstrap");
 
 import Vue from "vue";
+import excel from "vue-excel-export"
 window.Vue = require("vue").default;
-
+Vue.use(excel)
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -23,6 +24,9 @@ files
     .map((key) =>
         Vue.component(key.split("/").pop().split(".")[0], files(key).default)
     );
+
+Vue.component("data-table", require("./components/dataTable.vue").default)
+
 Vue.component("catalogs-empresas-edit",require("./views/catalogs/EmpresasEdit.vue").default);
 Vue.component("catalogs-roles-edit",require("./views/catalogs/RolesEdit.vue").default);
 Vue.component("catalogs-rolemodule",require("./views/catalogs/RoleModule.vue").default);
