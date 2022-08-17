@@ -25,15 +25,21 @@ files
         Vue.component(key.split("/").pop().split(".")[0], files(key).default)
     );
 
+//componentes de componentes
 Vue.component("data-table", require("./components/dataTable.vue").default)
+Vue.component("InputField",require("./components/InputField.vue").default);
 
+//componentes de reportes
+Vue.component("reports-general", require("./views/reports/General.vue").default);
+
+//componentes de catalogos
 Vue.component("catalogs-empresas-edit",require("./views/catalogs/EmpresasEdit.vue").default);
 Vue.component("catalogs-roles-edit",require("./views/catalogs/RolesEdit.vue").default);
 Vue.component("catalogs-rolemodule",require("./views/catalogs/RoleModule.vue").default);
 Vue.component("catalogs-users-edit", require("./views/catalogs/UsersEdit.vue").default);
 Vue.component("profile",require("./views/Profile.vue").default);
 Vue.component("registrar",require("./views/Registrar.vue").default);
-Vue.component("InputField",require("./components/InputField.vue").default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

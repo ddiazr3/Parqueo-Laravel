@@ -164,10 +164,10 @@ export default {
 .btn {
     margin-right: 10px;
 }
-.active{
-    color: white;
-    background-color: #3490dc;
-}
+/*.active{*/
+/*    color: white;*/
+/*    background-color: #3490dc;*/
+/*}*/
 .disabled{
     color: white;
     background-color: darkgrey;

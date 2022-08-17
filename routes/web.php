@@ -20,12 +20,20 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('profile', Controllers\ProfileController::class, ['only' => ['index', 'detail', 'store']]);
     Route::get('registros/cancelar/{id}', [Controllers\RegistroController::class,'cancelar']);
     Route::get('registros/salir/{id}', [Controllers\RegistroController::class,'salir']);
+
+    Route::post('reports/generales/search', [Controllers\Reports\ReporteGeneralController::class,'search']);
+    Route::post('reports/generales/export-excel', [Controllers\Reports\ReporteGeneralController::class,'exportExcel']);
+    Route::post('reports/generales/export-pdf', [Controllers\Reports\ReporteGeneralController::class,'exportPdf']);
 });
 
 Route::group(['middleware' => ['auth', 'cancerbero']], function () {
 
     Route::get('/',[Controllers\HomeController::class, 'index'])->name('index.index');
     Route::resource('registros', Controllers\RegistroController::class);
+
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::resource('generales', Controllers\Reports\ReporteGeneralController::class);
+    });
 
     Route::prefix('catalogs')->name('catalogs.')->group(function () {
         Route::resource('empresas', Controllers\Catalogs\EmpresaController::class);
