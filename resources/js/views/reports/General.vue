@@ -22,7 +22,9 @@
                 </div>
                 <div class="col-sm-2">
                     <label>Min. transcurridos despues de</label>
-                    <input type="time" class="form-control" v-model.trim="objectSeaarch.min">
+                    <selectize v-model="objectSeaarch.min">
+                        <option v-for="min in minutos" :value="min" v-text="min"></option>
+                    </selectize>
                 </div>
                 <div class="col-sm-2">
                     <label>Empresa</label>
@@ -63,17 +65,19 @@
                             <th>Placa</th>
                             <th>Fecha Ingreso</th>
                             <th>Fecha Egreso</th>
-                            <th>Tiempo Transcurrido</th>
+                            <th>Min. Transcurridos</th>
+                            <th>Hrs. Transcurridas</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr v-for="d in data.data">
-                            <td v-text="d.empresa.empresa"></td>
+                            <td v-text="d.empresa"></td>
                             <td v-text="d.descripcion"></td>
                             <td v-text="d.placa"></td>
                             <td v-text="d.fecha_ingreso"></td>
                             <td v-text="d.fecha_egreso"></td>
-                            <td>{{ timeSince(d.fecha_ingreso, d.fecha_egreso) }}</td>
+                            <td v-text="`${d.minutos } min.`"></td>
+                            <td v-text="`${d.horas } hrs.`"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -121,7 +125,12 @@ export default {
             validationErrors: {
                 user: null,
             },
-            now: moment()
+            now: moment(),
+            minutos: ["0",
+                "01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20",
+                "21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40",
+                "41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60"
+            ]
         };
     },
     components: {

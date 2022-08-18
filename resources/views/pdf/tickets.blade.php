@@ -25,18 +25,20 @@
         <th>Placa</th>
         <th>Fecha Ingreso</th>
         <th>Fecha Egreso</th>
-        <th>Tiempo Transcurrido</th>
+        <th>Min. Transcurridos</th>
+        <th>Hrs. Transcurridas</th>
     </tr>
     </thead>
     <tbody>
     @foreach($tickets as $ticket)
     <tr style="text-align: left">
-        <td>{{$ticket->empresa->empresa ?? ''}}</td>
+        <td>{{$ticket->empresa ?? ''}}</td>
         <td>{{$ticket->desccripcion}}</td>
         <td>{{$ticket->placa}}</td>
         <td>{{$ticket->fecha_ingreso}}</td>
         <td>{{$ticket->fecha_egreso}}</td>
-        <td></td>
+        <td>{{$ticket->minutos }}  min.</td>
+        <td>{{$ticket->horas}} hrs.</td>
     </tr>
     @endforeach
     </tbody>
