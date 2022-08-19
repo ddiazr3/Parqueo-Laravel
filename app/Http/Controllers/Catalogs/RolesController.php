@@ -50,7 +50,7 @@ class RolesController extends CrudController
     public function detail(Request $request, $id)
     {
         $rmpids = [];
-        $role = ['name' => null, 'description' => null, 'role_module_permissions' => [], 'empresas_ids' => []];
+        $role = ['name' => null, 'description' => null,'ver_dashboar' => false, 'role_module_permissions' => [], 'empresas_ids' => []];
 
         if ($id !== '0') {
             $id = Crypt::decrypt($id);
@@ -159,6 +159,7 @@ class RolesController extends CrudController
             }
 
             $role->name = $request->role['name'];
+            $role->ver_dashboard = $request->role['ver_dashboard'];
             $role->description = $request->role['description'];
             $role->save();
 

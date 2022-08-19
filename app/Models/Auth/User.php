@@ -5,6 +5,7 @@ use App\Models\Empresa;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -51,4 +52,14 @@ class User extends Authenticatable
 			return base64_encode(file_get_contents(public_path() . '/images/user-generic.jpg'));
 		}
 	}
+
+    public function getRoles($dasboard = false){
+        $roles = Role::whereIn('id', Auth::user()
+            ->roleIds());
+        if($dasboard){
+            $roles = $roles->where('ver_dashboard',1);
+        }
+        $roles = $roles->get();
+        return $roles;
+    }
 }

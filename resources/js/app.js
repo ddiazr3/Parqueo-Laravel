@@ -25,10 +25,13 @@ files
         Vue.component(key.split("/").pop().split(".")[0], files(key).default)
     );
 
+Vue.component("dashboard",require("./views/Dashboard.vue").default)
+
 //componentes de componentes
 Vue.component("data-table", require("./components/dataTable.vue").default)
 Vue.component("InputField",require("./components/InputField.vue").default);
-
+Vue.component("BarChart",require("./components/Chart/BarChart.vue").default);
+Vue.component("DoughnutChart",require("./components/Chart/DoughnutChart.vue").default);
 //componentes de reportes
 Vue.component("reports-general", require("./views/reports/General.vue").default);
 

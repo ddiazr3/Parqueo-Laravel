@@ -73,8 +73,10 @@
 <script>
 import axios from "axios";
 import Selectize from "vue2-selectize";
+import Sweetalert from "../../sweetalert";
 
 export default {
+    mixins: [Sweetalert],
     data() {
         return {
             data: {
@@ -126,10 +128,14 @@ export default {
         handleError(error) {
             this.saving = false;
 
-            if (error.response.status == 422) {
-                this.validationErrors = error.response.data.errors;
+            if (error.response != undefined) {
+                if (error.response.status == 422) {
+                    this.validationErrors = error.response.data.errors;
+                } else {
+                    this.alertError(this, {text: error.response.data.message})
+                }
             } else {
-                alert(error.response.data.message);
+                console.log(error)
             }
         },
     },

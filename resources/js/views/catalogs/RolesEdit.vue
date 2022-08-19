@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="form-group col-sm-12 mb-2">
                         <label for="nombre">Nombre</label>
-                        <input name="nombre" type="text" :class="errorClass('role.name')" v-model="data.role.name" />
+                        <input name="nombre" type="text" :class="errorClass('role.name')" v-model="data.role.name"/>
                         <small class="text-danger" v-if="validationErrors['role.name']">
                             {{ validationErrors["role.name"][0] }}
                         </small>
@@ -44,6 +44,12 @@
                             </selectize>
                         </div>
                     </div>
+                    <div class="col-sm-12 mb-2">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch1" v-model="data.role.ver_dashboard">
+                            <label class="custom-control-label" for="customSwitch1" >Ver Dashboar</label>
+                        </div>
+                    </div>
                 </div>
 
                 <label>Permisos</label>
@@ -67,7 +73,10 @@
 <script>
 import axios from "axios";
 import Selectize from "vue2-selectize";
+import Sweetalert from "../../sweetalert";
+
 export default {
+    mixins: [Sweetalert],
     data() {
         return {
             data: {
@@ -118,10 +127,14 @@ export default {
         },
         handleError(error) {
             this.saving = false;
-            if (error.response.status == 422) {
-                this.validationErrors = error.response.data.errors;
+            if (error.response != undefined) {
+                if (error.response.status == 422) {
+                    this.validationErrors = error.response.data.errors;
+                } else {
+                    this.alertError(this, {text: error.response.data.message})
+                }
             } else {
-                alert(error.response.data.message);
+                console.log(error)
             }
         },
         errorClass(item) {
