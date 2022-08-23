@@ -117,10 +117,10 @@ class ReporteGeneralController extends Controller
             $tickets = $tickets->where('tickets.placa', $placa);
         }
         if ($fechai) {
-            $tickets = $tickets->where('tickets.fecha_ingreso', '>=', $fechai);
+            $tickets = $tickets->where('tickets.created_at', '>=', $fechai);
         }
         if ($fechaf) {
-            $tickets = $tickets->where('tickets.fecha_egreso', '>=', $fechaf);
+            $tickets = $tickets->where('tickets.created_at', '<=', $fechaf);
         }
         if ($min) {
             $tickets = $tickets->whereRaw("(

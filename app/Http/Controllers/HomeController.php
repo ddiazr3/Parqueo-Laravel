@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WelcomeMail;
 use App\Models\Auth\Role;
 use App\Models\Empresa;
 use App\Models\Ticket;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -73,6 +75,12 @@ class HomeController extends Controller
             'dias' => $dias,
             'empresas' => $data
         ];
+
+//        $mailInfo = [
+//            'title' => 'Welcome New User',
+//            'url' => 'https://www.remotestack.io'
+//        ];
+//        Mail::to('danylen1@hotmail.com')->send(new WelcomeMail($mailInfo));
 
         return view('component')
             ->withBreadcrumb($breadcrumb)
