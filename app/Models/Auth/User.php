@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -52,6 +53,10 @@ class User extends Authenticatable
 			return base64_encode(file_get_contents(public_path() . '/images/user-generic.jpg'));
 		}
 	}
+
+    public function getUrlPathAttributeFoto(){
+        return Storage::url($this->foto);
+    }
 
     public function getRoles($dasboard = false){
         $roles = Role::whereIn('id', Auth::user()

@@ -25,7 +25,7 @@ class ProfileController extends Controller
     public function detail(Request $request, $id)
     {
         $user = User::findOrFail(Auth::id());
-
+        $user->foto = $user->foto ? $user->getUrlPathAttributeFoto() : $user->foto;
         return response()->json([
             'user'           => $user,
             'changePassword' => false,
@@ -55,7 +55,15 @@ class ProfileController extends Controller
 //        sleep(3);
         $request->validate($rules, $messages);
 
+
+
+
         $user       = User::findOrFail(Auth::id());
+
+        if ($request->user['foto']) {
+            $user->foto = $request->user['foto']['foto'];
+        }
+
         $user->name = $request->user['name'];
         if ($savePass) {
             $user->password = Hash::make($request->user['password']);

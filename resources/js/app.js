@@ -32,6 +32,8 @@ Vue.component("data-table", require("./components/dataTable.vue").default)
 Vue.component("InputField",require("./components/InputField.vue").default);
 Vue.component("BarChart",require("./components/Chart/BarChart.vue").default);
 Vue.component("DoughnutChart",require("./components/Chart/DoughnutChart.vue").default);
+Vue.component("upload-images",require("./components/uploadImages.vue").default);
+Vue.component("upload",require("./components/upload.vue").default);
 //componentes de reportes
 Vue.component("reports-general", require("./views/reports/General.vue").default);
 

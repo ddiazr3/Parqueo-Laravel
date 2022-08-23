@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
+use Exception;
 
 class RegistroController extends Controller
 {
@@ -79,11 +82,43 @@ class RegistroController extends Controller
         $ticket->save();
 
         $ticketRetur = Ticket::with('empresa')->find($ticket->id);
-
         broadcast(new IngresoTicketEvent($ticketRetur,$empresaId[0]))->toOthers();
+
+
+        self::print($ticket);
+
        // event(new IngresoTicketEvent($ticketRetur,$empresaId[0]));
         return response()->json($ticketRetur);
 
+    }
+
+    static function print($ticket){
+        $nombreImpresora = Auth::user()->nombre_impresora;
+        if($nombreImpresora){
+
+            try {
+                $conector = new WindowsPrintConnector($nombreImpresora);
+                //  $connector = new NetworkPrintConnector("10.x.x.x", 9100); //conexio a impresoras por ip
+                $impresora = new Printer($conector);
+
+                $impresora->setJustification(Printer::JUSTIFY_CENTER);
+                $impresora->setTextSize(2, 2);
+                $impresora->text("Imprimiendo\n");
+                $impresora->text("ticket\n");
+                $impresora->text("desde\n");
+                $impresora->text("Laravel\n");
+                $impresora->setTextSize(1, 1);
+                $impresora->text("https://parzibyte.me");
+                $impresora->feed(5);
+                $impresora->close();
+            }catch (Exception $e){
+                Log::info($e);
+                return false;
+            } finally {
+
+            }
+
+        }
     }
 
     public function cancelar($id){

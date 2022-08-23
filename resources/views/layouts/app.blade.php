@@ -27,8 +27,13 @@
         </nav>
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="/" class="brand-link">
-                <img src="https://via.placeholder.com/150x150" alt="{{config('app.name')}}" class="brand-image elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">{{config('app.name')}}</span>
+                @if(\Illuminate\Support\Facades\Auth::user()->foto)
+                    <img src="{{ \Illuminate\Support\Facades\Auth::user()->getUrlPathAttributeFoto() }}" alt="{{config('app.name')}}" class="brand-image elevation-3" style="opacity: .8">
+                @else
+                    <img src="https://via.placeholder.com/150x150" alt="{{config('app.name')}}" class="brand-image elevation-3" style="opacity: .8">
+                @endif
+
+                <span class="brand-text font-weight-light">Control Ingreso</span>
             </a>
 
             <div class="sidebar">

@@ -87,27 +87,43 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group mb-2">
-                            <div class="form-check">
-                                <input
-                                    type="checkbox"
-                                    class="form-check-input"
-                                    id="active"
-                                    v-model="data.user.active"
-                                />
-                                <label class="form-check-label" for="active">Activo</label>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch1" v-model="data.user.impresora">
+                                <label class="custom-control-label" for="customSwitch1" >Utiliza Impresora el usuario</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" v-if="data.user.impresora">
+                        <div class="form-group mb-2">
+                            <label for="email">Nombre Impresora</label>
+                            <input
+                                name="email"
+                                type="email"
+                                autocomplete="off"
+                                :class="{
+                                    'form-control': true,
+                                     'is-invalid': validationErrors['user.nombre_impresora']
+                                }"
+                                v-model="data.user.nombre_impresora"
+                            />
+                            <div v-if="validationErrors['user.nombre_impresora']" class="invalid-feedback">
+                                {{ validationErrors["user.nombre_impresora"][0] }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group mb-2">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch1" v-model="data.user.active">
+                                <label class="custom-control-label" for="customSwitch1" >Activo</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-12" v-if="data.isSuper">
                         <div class="form-group mb-2">
-                            <div class="form-check">
-                                <input
-                                    type="checkbox"
-                                    class="form-check-input"
-                                    id="active"
-                                    v-model="data.user.super"
-                                />
-                                <label class="form-check-label" for="active">Super Usuario</label>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch1" v-model="data.user.super">
+                                <label class="custom-control-label" for="customSwitch1" >Super Usuario</label>
                             </div>
                         </div>
                     </div>
@@ -115,14 +131,9 @@
                 <div class="row" v-if="id != 0">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <div class="form-check">
-                                <input
-                                    type="checkbox"
-                                    class="form-check-input"
-                                    id="active"
-                                    v-model="data.changePassword"
-                                />
-                                <label class="form-check-label" for="active">Cambiar password</label>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch1" v-model="data.changePassword">
+                                <label class="custom-control-label" for="customSwitch1" >Cambiar password</label>
                             </div>
                         </div>
                     </div>

@@ -25,6 +25,19 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="nombre">Foto</label><br>
+                            <img v-if="data.user.foto" :src="data.user.foto" width="300"
+                                 height="300">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="nombre">Cargar Nueva Foto</label>
+                           <upload-images :multiple="false" :model="data.user"></upload-images>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">

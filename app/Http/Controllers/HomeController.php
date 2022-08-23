@@ -202,5 +202,27 @@ class HomeController extends Controller
         return $data;
     }
 
+    public function uploadimages(Request $request){
+        $rules    = [
+            'file'     => 'required'
+        ];
+        $messages = [
+            'file.required'     => 'El archivo es requerido'
+        ];
+        $request->validate($rules, $messages);
+        if ($request->has('foto')) {
+            $foto = $request->file('foto');
+        } else if ($request->has('file')) {
+            $foto = $request->file('file');
+        } else {
+            abort(501, 'Foto no fue almacenada');
+        }
+        if ($foto->getSize() == 0) {
+            abort(501, 'La foto está corrupta.  Intente de nuevo.');
+        }
+        $file = $foto->store('public/images');
+        return response()->json($file);
+    }
+
 
 }

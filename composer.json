@@ -19,6 +19,7 @@
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
         "maatwebsite/excel": "^3.1",
+        "mike42/escpos-php": "^2.2",
         "psr/simple-cache": "^2.0",
         "pusher/pusher-php-server": "^7.0"
     },

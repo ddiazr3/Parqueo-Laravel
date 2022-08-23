@@ -26,6 +26,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('reports/generales/export-pdf', [Controllers\Reports\ReporteGeneralController::class,'exportPdf']);
 
     Route::post('search/{limpiar}', [Controllers\HomeController::class,'search']);
+
+    Route::post('/uploadimages',[Controllers\HomeController::class, 'uploadimages']);
 });
 
 Route::group(['middleware' => ['auth', 'cancerbero']], function () {

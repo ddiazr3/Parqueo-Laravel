@@ -70,6 +70,8 @@ class UsersController extends CrudController
             'active' => true,
             'super' => false,
             'role_ids' => [],
+            'impresora' => false,
+            'nombre_impresora' => null,
             'empresas_ids' => []
         ];
 
@@ -150,6 +152,7 @@ class UsersController extends CrudController
     public function update(Request $request, $id)
     {
         $savePass = ($id === 0 || $request->changePassword);
+        $print = $request->user['impresora'];
         $rules = [
             'user.name' => 'required',
             'user.email' => 'required|unique:users,email' . ($id !== 0 ? ',' . Crypt::decrypt($id) : ''),
@@ -172,6 +175,11 @@ class UsersController extends CrudController
             $messages['user.password.confirmed'] = 'Las passwords no concuerdan';
         }
 
+        if ($print) {
+            $rules['user.nombre_impresora'] = 'required';
+            $messages['user.nombre_impresora.required'] = 'Nombre de la impresora es requerida';
+        }
+
         $request->validate($rules, $messages);
 
         DB::transaction(function () use ($request, $id, $savePass) {
@@ -188,6 +196,8 @@ class UsersController extends CrudController
             $user->email = $request->user['email'];
             $user->active = $request->user['active'];
             $user->super = $request->user['super'];
+            $user->impresora = $request->user['impresora'];
+            $user->nombre_impresora = $request->user['nombre_impresora'];
             if ($savePass) {
                 $user->password = Hash::make($request->user['password']);
             }
